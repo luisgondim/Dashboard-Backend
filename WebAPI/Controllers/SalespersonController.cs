@@ -12,55 +12,55 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class Cars : ControllerBase
+    public class SalespersonController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
-        public Cars(ApplicationDbContext context)
+        public SalespersonController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Cars
+        // GET: api/Salesperson
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Car>>> GetCars()
+        public async Task<ActionResult<IEnumerable<Salesperson>>> GetSalespeople()
         {
-          if (_context.Cars == null)
+          if (_context.Salespeople == null)
           {
               return NotFound();
           }
-            return await _context.Cars.ToListAsync();
+            return await _context.Salespeople.ToListAsync();
         }
 
-        // GET: api/Cars/5
+        // GET: api/Salesperson/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Car>> GetCar(int id)
+        public async Task<ActionResult<Salesperson>> GetSalesperson(int id)
         {
-          if (_context.Cars == null)
+          if (_context.Salespeople == null)
           {
               return NotFound();
           }
-            var car = await _context.Cars.FindAsync(id);
+            var salesperson = await _context.Salespeople.FindAsync(id);
 
-            if (car == null)
+            if (salesperson == null)
             {
                 return NotFound();
             }
 
-            return car;
+            return salesperson;
         }
 
-        // PUT: api/Cars/5
+        // PUT: api/Salesperson/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCar(int id, Car car)
+        public async Task<IActionResult> PutSalesperson(int id, Salesperson salesperson)
         {
-            if (id != car.CarID)
+            if (id != salesperson.SalespersonID)
             {
                 return BadRequest();
             }
 
-            _context.Entry(car).State = EntityState.Modified;
+            _context.Entry(salesperson).State = EntityState.Modified;
 
             try
             {
@@ -68,7 +68,7 @@ namespace WebAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CarExists(id))
+                if (!SalespersonExists(id))
                 {
                     return NotFound();
                 }
@@ -81,44 +81,44 @@ namespace WebAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Cars
+        // POST: api/Salesperson
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Car>> PostCar(Car car)
+        public async Task<ActionResult<Salesperson>> PostSalesperson(Salesperson salesperson)
         {
-          if (_context.Cars == null)
+          if (_context.Salespeople == null)
           {
-              return Problem("Entity set 'ApplicationDbContext.Cars'  is null.");
+              return Problem("Entity set 'ApplicationDbContext.Salespeople'  is null.");
           }
-            _context.Cars.Add(car);
+            _context.Salespeople.Add(salesperson);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCar", new { id = car.CarID }, car);
+            return CreatedAtAction("GetSalesperson", new { id = salesperson.SalespersonID }, salesperson);
         }
 
-        // DELETE: api/Cars/5
+        // DELETE: api/Salesperson/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCar(int id)
+        public async Task<IActionResult> DeleteSalesperson(int id)
         {
-            if (_context.Cars == null)
+            if (_context.Salespeople == null)
             {
                 return NotFound();
             }
-            var car = await _context.Cars.FindAsync(id);
-            if (car == null)
+            var salesperson = await _context.Salespeople.FindAsync(id);
+            if (salesperson == null)
             {
                 return NotFound();
             }
 
-            _context.Cars.Remove(car);
+            _context.Salespeople.Remove(salesperson);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool CarExists(int id)
+        private bool SalespersonExists(int id)
         {
-            return (_context.Cars?.Any(e => e.CarID == id)).GetValueOrDefault();
+            return (_context.Salespeople?.Any(e => e.SalespersonID == id)).GetValueOrDefault();
         }
     }
 }

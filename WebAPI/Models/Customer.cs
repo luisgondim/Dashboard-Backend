@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
+using WebAPI.Data;
 
 namespace WebAPI.Models
 {
-	public class Customer
-	{
+    public class Customer
+    {
         [Key]
         public int CustomerID { get; set; }
         public string FirstName { get; set; }
@@ -14,4 +15,3 @@ namespace WebAPI.Models
         public string Address { get; set; }
     }
 }
-

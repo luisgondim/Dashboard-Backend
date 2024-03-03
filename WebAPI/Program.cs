@@ -31,6 +31,15 @@ catch (Exception ex)
 
 var app = builder.Build();
 
+// Enable CORS
+app.UseCors(builder =>
+{
+    builder
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader();
+});
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -44,4 +53,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run("https://localhost:5001");
+app.Run("https://localhost:5001/");
