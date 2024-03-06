@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using WebAPI.Application.Interfaces;
+using WebAPI.Application.Services;
 using WebAPI.Data;
+using WebAPI.Infrastructure.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +31,10 @@ catch (Exception ex)
     Console.WriteLine("Error configuring the database context: " + ex.Message);
     throw new Exception("Error configuring the database context: " + ex.Message, ex);
 }
+
+//Dependecy Injection
+builder.Services.AddScoped<ICarsService, CarsService>();
+builder.Services.AddScoped<CarsRepository>();
 
 var app = builder.Build();
 

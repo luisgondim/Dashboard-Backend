@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WebAPI.Application.Interfaces;
 using WebAPI.Data;
 using WebAPI.Models;
 
@@ -15,45 +16,34 @@ namespace WebAPI.Controllers
     [ApiController]
     public class Cars : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ICarsService _carsServices;
 
-        public Cars(ApplicationDbContext context)
+        public Cars(ICarsService carsServices)
         {
-            _context = context;
+            _carsServices = carsServices;
         }
 
         // GET: api/Cars
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Car>>> GetCars()
         {
-          if (_context.Cars == null)
-          {
-              return NotFound();
-          }
-            return await _context.Cars.ToListAsync();
+            var cars = await _carsServices.GetCars();
+            return Ok (cars);
         }
 
         // GET: api/Cars/5
-        [EnableCors("Policy1")]
         [HttpGet("{id}")]
         public async Task<ActionResult<Car>> GetCar(int id)
         {
-          if (_context.Cars == null)
-          {
-              return NotFound();
-          }
-            var car = await _context.Cars.FindAsync(id);
-
+            var car = await _carsServices.GetCarById(id);
             if (car == null)
             {
                 return NotFound();
             }
-
-            return car;
+            return Ok (car);    
         }
 
         // PUT: api/Cars/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCar(int id, Car car)
         {
@@ -62,65 +52,39 @@ namespace WebAPI.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(car).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _carsServices.UpdateCar(id, car);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (ArgumentException ex)
             {
-                if (!CarExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound(ex.Message);
             }
 
             return NoContent();
         }
 
+
         // POST: api/Cars
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Car>> PostCar(Car car)
         {
-          if (_context.Cars == null)
-          {
-              return Problem("Entity set 'ApplicationDbContext.Cars'  is null.");
-          }
-            _context.Cars.Add(car);
-            await _context.SaveChangesAsync();
+            await _carsServices.AddCar(car);
 
-            return CreatedAtAction("GetCar", new { id = car.CarID }, car);
+            return CreatedAtAction(nameof(GetCar), new { id = car.CarID }, car);
         }
 
         // DELETE: api/Cars/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCar(int id)
         {
-            if (_context.Cars == null)
+            var result = await _carsServices.DeleteCar(id);
+            if (!result)
             {
                 return NotFound();
             }
-            var car = await _context.Cars.FindAsync(id);
-            if (car == null)
-            {
-                return NotFound();
-            }
-
-            _context.Cars.Remove(car);
-            await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool CarExists(int id)
-        {
-            return (_context.Cars?.Any(e => e.CarID == id)).GetValueOrDefault();
         }
     }
 }

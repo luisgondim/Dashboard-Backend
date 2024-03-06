@@ -21,11 +21,23 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Data\" />
-    <None Remove="Models\" />
+    <None Remove="Application\" />
+    <None Remove="Domain\" />
+    <None Remove="Infrastructure\" />
+    <None Remove="Application\Interfaces\" />
+    <None Remove="Application\Services\" />
+    <None Remove="Infrastructure\Repository\" />
+    <None Remove="Infrastructure\Data\" />
+    <None Remove="Domain\Models\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Data\" />
-    <Folder Include="Models\" />
+    <Folder Include="Application\" />
+    <Folder Include="Domain\" />
+    <Folder Include="Infrastructure\" />
+    <Folder Include="Application\Interfaces\" />
+    <Folder Include="Application\Services\" />
+    <Folder Include="Infrastructure\Repository\" />
+    <Folder Include="Infrastructure\Data\" />
+    <Folder Include="Domain\Models\" />
   </ItemGroup>
 </Project>
